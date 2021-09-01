@@ -8,7 +8,7 @@ class Model_login extends CI_Model {
             $userid     = $finduserid['userid'];
             $password   = md5($params['password']."-".$userid);
 
-            $this->db->select('a.username, a.fullname, a.email, b.officeid, b.officename');
+            $this->db->select('a.userid, a.username, a.fullname, a.email, b.officeid, b.officename, a.image');
             $this->db->select('b.officetype, b.regionid, d.regiondescription, c.roleid, c.roledescription');
             $this->db->from('users a');
             $this->db->join('office b', 'a.office = b.officeid');

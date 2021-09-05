@@ -37,7 +37,7 @@ class Model_reportdetail extends CI_Model {
                             cc.fullname as nama_pengguna,c.chargeable_weight as berat, c.connote_service_price as ongkir, cc.pph ,cc.NONPPN ,
                             c.connote_surcharge_amount as asuransi, c.connote_amount as total , cc.cod_value, cc.fee_value,cc.total_cod,
                             cc.nopen, cc.regional , ldc.location_code , ldc.location_type ");
-        $this->db->select("COALESCE(cc.PPN, 0) AS ppn");
+        $this->db->select("COALESCE(cc.PPN, 0) AS ppn, date_format(c.created_at, '%Y-%m-%d') as created");
         $this->db->from('connote c');
         $this->db->join('connote_customfield cc','c.connote_id = cc.connote_id','LEFT');
         $this->db->join('location_data_created ldc','c.connote_id = ldc.connote_id','LEFT');
@@ -55,7 +55,7 @@ class Model_reportdetail extends CI_Model {
         $this->db->where($whereValues);
         $this->db->where("date_format(c.created_at, '%Y-%m-%d') between '$start' and '$end'");
 
-        $this->db->order_by('c.connote_id', 'ASC');
+        $this->db->order_by('c.created_at', 'DESC');
     }
 
     private function query_menginap($body){

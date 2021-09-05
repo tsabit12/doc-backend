@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 5.5.62, for Win64 (AMD64)
+-- MySQL dump 10.13  Distrib 8.0.26, for macos11.3 (x86_64)
 --
 -- Host: localhost    Database: doc
 -- ------------------------------------------------------
--- Server version	5.5.5-10.4.17-MariaDB
+-- Server version	8.0.26
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -21,7 +21,7 @@
 
 DROP TABLE IF EXISTS `connote`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `connote` (
   `connote_id` varchar(255) NOT NULL,
   `connote_number` varchar(255) DEFAULT NULL,
@@ -65,16 +65,18 @@ CREATE TABLE `connote` (
   `id_source_tariff` varchar(255) DEFAULT NULL,
   `pod` varchar(255) DEFAULT NULL,
   `is_locked` varchar(255) DEFAULT NULL,
-  `tariff_formula_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`tariff_formula_data`)),
+  `tariff_formula_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   `formula_name` varchar(255) DEFAULT NULL,
   `create_from` varchar(255) DEFAULT NULL,
   `bags` varchar(255) DEFAULT NULL,
-  `connote_sender_custom_field` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`connote_sender_custom_field`)),
+  `connote_sender_custom_field` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   `connote_sla_date` datetime DEFAULT NULL,
   `total_discount` varchar(255) DEFAULT NULL,
   `connote_code_` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`connote_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  PRIMARY KEY (`connote_id`),
+  CONSTRAINT `connote_chk_1` CHECK (json_valid(`tariff_formula_data`)),
+  CONSTRAINT `connote_chk_2` CHECK (json_valid(`connote_sender_custom_field`))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -93,7 +95,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `connote_customfield`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `connote_customfield` (
   `connote_id` varchar(255) DEFAULT NULL,
   `id_pelanggan_korporat` varchar(255) DEFAULT NULL,
@@ -135,7 +137,7 @@ CREATE TABLE `connote_customfield` (
   `fullname` varchar(255) DEFAULT NULL,
   KEY `FK_connote` (`connote_id`),
   CONSTRAINT `FK_connote` FOREIGN KEY (`connote_id`) REFERENCES `connote` (`connote_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,18 +156,18 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `keys`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `keys` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
   `key` varchar(40) NOT NULL,
-  `level` int(11) NOT NULL,
-  `ignore_limits` tinyint(1) NOT NULL DEFAULT 0,
-  `is_private_key` tinyint(1) NOT NULL DEFAULT 0,
-  `ip_addresses` text DEFAULT NULL,
-  `date_created` int(11) NOT NULL,
+  `level` int NOT NULL,
+  `ignore_limits` tinyint(1) NOT NULL DEFAULT '0',
+  `is_private_key` tinyint(1) NOT NULL DEFAULT '0',
+  `ip_addresses` text,
+  `date_created` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -184,7 +186,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `location_data_created`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `location_data_created` (
   `connote_id` varchar(255) DEFAULT NULL,
   `location_id` varchar(255) DEFAULT NULL,
@@ -208,7 +210,7 @@ CREATE TABLE `location_data_created` (
   `custom_field` varchar(255) DEFAULT NULL,
   KEY `FK_connote_loc` (`connote_id`),
   CONSTRAINT `FK_connote_loc` FOREIGN KEY (`connote_id`) REFERENCES `connote` (`connote_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -227,7 +229,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `office`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `office` (
   `officeid` varchar(8) NOT NULL,
   `officename` varchar(50) NOT NULL,
@@ -237,7 +239,7 @@ CREATE TABLE `office` (
   PRIMARY KEY (`officeid`),
   KEY `regionid` (`regionid`),
   CONSTRAINT `office_ibfk_1` FOREIGN KEY (`regionid`) REFERENCES `region` (`regionid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -251,17 +253,48 @@ INSERT INTO `office` VALUES ('40000','BANDUNG','40000','40004','KPRK'),('40005',
 UNLOCK TABLES;
 
 --
+-- Table structure for table `pod`
+--
+
+DROP TABLE IF EXISTS `pod`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pod` (
+  `connote_id` varchar(255) DEFAULT NULL,
+  `pod_id` int NOT NULL AUTO_INCREMENT,
+  `photo` text,
+  `signature` text,
+  `timeReceive` datetime DEFAULT NULL,
+  `receiver` varchar(255) DEFAULT NULL,
+  `coordinate` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`pod_id`),
+  KEY `connote_id` (`connote_id`),
+  CONSTRAINT `pod_ibfk_1` FOREIGN KEY (`connote_id`) REFERENCES `connote` (`connote_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pod`
+--
+
+LOCK TABLES `pod` WRITE;
+/*!40000 ALTER TABLE `pod` DISABLE KEYS */;
+INSERT INTO `pod` VALUES ('29b9d6d5-fa0d-4be6-9942-63a8e86f4ace',16,'https://firebasestorage.googleapis.com/v0/b/paketidv2.appspot.com/o/pos%2F2021%2F07%2F21%2Fcamera.photoDeliveryProcess.560003526.6f8ad28869ea7c480be9.1626857882572.jpg?alt=media','https://firebasestorage.googleapis.com/v0/b/paketidv2.appspot.com/o/pos%2F2021%2F07%2F21%2Fsignature.signatureDeliveryProcess.560003526.6f8ad28869ea7c480be9.1626857878402.jpg?alt=media','2021-07-21 15:58:42','po box (DITERIMA PENERIMA)','-0.2489678,115.7147587');
+/*!40000 ALTER TABLE `pod` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ref_role`
 --
 
 DROP TABLE IF EXISTS `ref_role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ref_role` (
-  `roleid` int(11) NOT NULL AUTO_INCREMENT,
+  `roleid` int NOT NULL AUTO_INCREMENT,
   `roledescription` varchar(25) NOT NULL,
   PRIMARY KEY (`roleid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -280,13 +313,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `region`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `region` (
   `regionid` varchar(8) NOT NULL,
-  `sortnumber` int(11) NOT NULL,
+  `sortnumber` int NOT NULL,
   `regiondescription` varchar(35) DEFAULT NULL,
   PRIMARY KEY (`regionid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -305,12 +338,12 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `tes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tes` (
   `title` varchar(50) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL,
   `date` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -329,24 +362,25 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
-  `userid` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` int NOT NULL AUTO_INCREMENT,
   `username` varchar(30) NOT NULL,
   `fullname` varchar(60) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `roleid` int(11) NOT NULL,
+  `roleid` int NOT NULL,
   `office` varchar(8) NOT NULL,
   `password` char(60) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `created_by` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_by` int NOT NULL,
+  `image` varchar(70) DEFAULT NULL,
   PRIMARY KEY (`userid`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
   KEY `roleid` (`roleid`),
   CONSTRAINT `users_ibfk_1` FOREIGN KEY (`roleid`) REFERENCES `ref_role` (`roleid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -355,8 +389,36 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'tsabit12','Tsabit Abdul Aziz','tsabit830@gmail.com',2,'40005','104ac35aeccd47c082e5677e242980a0','2021-08-15 10:04:00','2021-08-15 10:04:00',1);
+INSERT INTO `users` VALUES (1,'tsabit12','Tsabit Abdul Aziz','tsabit830@gmail.com',2,'40005','104ac35aeccd47c082e5677e242980a0','2021-08-15 03:04:00','2021-09-01 09:45:16',1,'6a72e6c14884c0bb7d053752d6d51a95.jpg'),(2,'pusat','User Pusat','pusat@gmail.com',2,'40005','67b942f3e524ec767aa11e247ac01036','2021-08-28 00:21:01','2021-08-31 03:14:22',1,'6b30019893e56ab599d8f8792eda2c55.jpg');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `zone_destination_data`
+--
+
+DROP TABLE IF EXISTS `zone_destination_data`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `zone_destination_data` (
+  `connote_id` varchar(255) DEFAULT NULL,
+  `zone_name` varchar(255) DEFAULT NULL,
+  `zode_code` varchar(255) DEFAULT NULL,
+  `zone_type_code` varchar(255) DEFAULT NULL,
+  `cache` varchar(255) DEFAULT NULL,
+  KEY `connote_id` (`connote_id`),
+  CONSTRAINT `zone_destination_data_ibfk_1` FOREIGN KEY (`connote_id`) REFERENCES `connote` (`connote_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `zone_destination_data`
+--
+
+LOCK TABLES `zone_destination_data` WRITE;
+/*!40000 ALTER TABLE `zone_destination_data` DISABLE KEYS */;
+INSERT INTO `zone_destination_data` VALUES ('29b9d6d5-fa0d-4be6-9942-63a8e86f4ace','75576','75576','tariff',NULL),('29b9d6d5-fa0d-4be6-9942-63a8e86f4ace','TRG','shTRG','Singkatan_Hub',NULL),('29b9d6d5-fa0d-4be6-9942-63a8e86f4ace','9','Regional9','destination_reg',NULL),('29b9d6d5-fa0d-4be6-9942-63a8e86f4ace','75576','KPCLK_75576','KPCLK',NULL),('29b9d6d5-fa0d-4be6-9942-63a8e86f4ace','75576','NOPEN_DEST_75576','destination_nopen',NULL),('29b9d6d5-fa0d-4be6-9942-63a8e86f4ace','75500','KPRK_DEST_75500','destination_kprk',NULL);
+/*!40000 ALTER TABLE `zone_destination_data` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -372,4 +434,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-03 16:02:29
+-- Dump completed on 2021-09-05 10:27:52

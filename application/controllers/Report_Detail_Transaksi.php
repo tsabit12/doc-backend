@@ -26,7 +26,8 @@ class Report_Detail_Transaksi extends REST_Controller{
                 array('field' => 'kprk', 'label' => 'kprk', 'rules' => 'required|max_length[6]'),
                 array('field' => 'regional', 'label' => 'regional', 'rules' => 'required|max_length[6]'),
                 array('field' => 'startdate', 'label' => 'startdate', 'rules' => 'required'),
-                array('field' => 'enddate', 'label' => 'enddate', 'rules' => 'required')
+                array('field' => 'enddate', 'label' => 'enddate', 'rules' => 'required'),
+                array('field' => 'status', 'label' => 'Status', 'rules' => 'required'),
             );
             $this->form_validation->set_data($body);
             $this->form_validation->set_rules($config);

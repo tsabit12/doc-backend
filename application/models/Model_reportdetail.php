@@ -38,7 +38,7 @@ class Model_reportdetail extends CI_Model {
         $this->db->select("c.connote_code, c.connote_service as service,cc.COD, c.connote_sender_name as pengirim, cc.user, 
                             cc.fullname as nama_pengguna,c.chargeable_weight as berat, c.connote_service_price as ongkir,  cc.PPN , cc.pph ,cc.NONPPN ,
                             c.connote_surcharge_amount as asuransi, c.connote_amount as total , cc.cod_value, cc.fee_value,cc.total_cod,
-                            cc.nopen, cc.regional , ldc.location_code , ldc.location_type ");
+                            cc.nokprk as nopen, cc.regional , ldc.location_code , ldc.location_type ");
         $this->db->from('connote c');
         $this->db->join('connote_customfield cc','c.connote_id = cc.connote_id','LEFT');
         $this->db->join('location_data_created ldc','c.connote_id = ldc.connote_id','LEFT');
@@ -49,7 +49,7 @@ class Model_reportdetail extends CI_Model {
             if($kprk == '00'){ //all kprk
                 $whereValues['cc.regional'] = $reg;
             }else{
-                $whereValues['cc.nopen'] = $kprk;
+                $whereValues['cc.nokprk as nopen'] = $kprk;
             }
         }
 
@@ -70,7 +70,7 @@ class Model_reportdetail extends CI_Model {
         $this->db->select("c.connote_code, c.connote_service as service,cc.COD, c.connote_sender_name as pengirim, cc.user, 
                             cc.fullname as nama_pengguna,c.chargeable_weight as berat, c.connote_service_price as ongkir,  cc.PPN , cc.pph ,cc.NONPPN ,
                             c.connote_surcharge_amount as asuransi, c.connote_amount as total , cc.cod_value, cc.fee_value,cc.total_cod,
-                            cc.nopen, cc.regional , ldc.location_code , ldc.location_type, c.connote_state ");
+                            cc.nokprk as nopen, cc.regional , ldc.location_code , ldc.location_type, c.connote_state ");
         $this->db->from('connote c');
         $this->db->join('connote_customfield cc','c.connote_id = cc.connote_id','LEFT');
         $this->db->join('location_data_created ldc','c.connote_id = ldc.connote_id','LEFT');
@@ -81,7 +81,7 @@ class Model_reportdetail extends CI_Model {
             if($kprk == '00'){ //all kprk
                 $whereValues['cc.regional'] = $reg;
             }else{
-                $whereValues['cc.nopen'] = $kprk;
+                $whereValues['cc.nokprk as nopen'] = $kprk;
             }
         }
 
@@ -103,7 +103,7 @@ class Model_reportdetail extends CI_Model {
         $this->db->select("c.connote_code, c.connote_service as service,cc.COD, c.connote_sender_name as pengirim, cc.user, 
                             cc.fullname as nama_pengguna,c.chargeable_weight as berat, c.connote_service_price as ongkir,  cc.PPN , cc.pph ,cc.NONPPN ,
                             c.connote_surcharge_amount as asuransi, c.connote_amount as total , cc.cod_value, cc.fee_value,cc.total_cod,
-                            cc.nopen, cc.regional , ldc.location_code , ldc.location_type, c.connote_state ");
+                            cc.nokprk as nopen, cc.regional , ldc.location_code , ldc.location_type, c.connote_state ");
         $this->db->from('connote c');
         $this->db->join('connote_customfield cc','c.connote_id = cc.connote_id','LEFT');
         $this->db->join('location_data_created ldc','c.connote_id = ldc.connote_id','LEFT');
@@ -114,7 +114,7 @@ class Model_reportdetail extends CI_Model {
             if($kprk == '00'){ //all kprk
                 $whereValues['cc.regional'] = $reg;
             }else{
-                $whereValues['cc.nopen'] = $kprk;
+                $whereValues['cc.nokprk as nopen'] = $kprk;
             }
         }
 
@@ -137,7 +137,7 @@ class Model_reportdetail extends CI_Model {
         $this->db->select("c.connote_code, c.connote_service as service,cc.COD, c.connote_sender_name as pengirim, cc.user, 
                             cc.fullname as nama_pengguna,c.chargeable_weight as berat, c.connote_service_price as ongkir,  cc.PPN , cc.pph ,cc.NONPPN ,
                             c.connote_surcharge_amount as asuransi, c.connote_amount as total , cc.cod_value, cc.fee_value,cc.total_cod,
-                            cc.nopen, cc.regional , ldc.location_code , ldc.location_type, c.connote_state ");
+                            cc.nokprk as nopen, cc.regional , ldc.location_code , ldc.location_type, c.connote_state ");
         $this->db->from('connote c');
         $this->db->join('connote_customfield cc','c.connote_id = cc.connote_id','LEFT');
         $this->db->join('location_data_created ldc','c.connote_id = ldc.connote_id','LEFT');
@@ -148,7 +148,7 @@ class Model_reportdetail extends CI_Model {
             if($kprk == '00'){ //all kprk
                 $whereValues['cc.regional'] = $reg;
             }else{
-                $whereValues['cc.nopen'] = $kprk;
+                $whereValues['cc.nokprk as nopen'] = $kprk;
             }
         }
 

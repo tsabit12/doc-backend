@@ -21,6 +21,8 @@ class Get extends REST_Controller{
             $response['message']['global'] = 'Simpan Data Sukses'; //must in object, if no message create empty object
             $response['result']  = '00';
         }
+
+        $this->response($response);
     }
 
     public function customfield_get(){

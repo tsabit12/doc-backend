@@ -11,12 +11,6 @@ class Report_Detail_Transaksi extends REST_Controller{
     public function index_post(){
         $response['status'] = false; //default status
         $response['message']['global'] = 'Data tidak ditemukan'; //default message is object 
-
-        // $regional       = $this->post('regional');
-        // $kprk         = $this->post('kprk');
-        // $start          = $this->post('startdate');
-        // $end            = $this->post('enddate');
-
         $body = $this->post();
 
         if(!isset($body['regional'])){
@@ -45,19 +39,6 @@ class Report_Detail_Transaksi extends REST_Controller{
             }
 
         }
-
-        // if($regional != ''){ //cek if data is extis
-        //     //then return status true
-        //     $q  = $this->regional($regional,$start, $end);
-        //     $response['status'] = true;
-        //     $response['message']['global'] = new StdClass(); //must in object, if no message create empty object
-        //     $response['result']  = $q;
-        //  }else{
-        //     $q  = $this->all($start, $end);
-        //     $response['status'] = true;
-        //     $response['message']['global'] = new StdClass(); //must in object, if no message create empty object
-        //     $response['result']  = $q;
-        // }
         
         $this->response($response, 200);
 

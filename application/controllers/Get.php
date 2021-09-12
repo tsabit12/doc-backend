@@ -311,7 +311,7 @@ class Get extends REST_Controller{
 
     private function noresi() {
         $date   = date('ymd');
-        for ($x = 1; $x <= 500; $x++) {
+        for ($x = 1; $x <= 2000; $x++) {
             $invID = str_pad($x, 7, '0', STR_PAD_LEFT);
             $resi[]   = 'P'.$date.''.$invID;
             $data = $resi;

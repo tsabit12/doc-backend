@@ -39,10 +39,13 @@ class Model_reportdetail extends CI_Model {
                             cc.fullname as nama_pengguna,c.chargeable_weight as berat, c.connote_service_price as ongkir, cc.pph ,cc.NONPPN ,
                             c.connote_surcharge_amount as asuransi, c.connote_amount as total , cc.cod_value, cc.fee_value,cc.total_cod,
                             cc.nokprk as nopen, cc.regional , ldc.location_code , ldc.location_type ");
-        $this->db->select("COALESCE(cc.PPN, 0) AS ppn, date_format(c.created_at, '%Y-%m-%d') as created, c.connote_state as status");
+        $this->db->select("COALESCE(cc.PPN, 0) AS ppn, date_format(c.created_at, '%Y-%m-%d') as created, d.action as status");
+        $this->db->select("date_format(c.connote_sla_date, '%Y-%m-%d') as sla_date, date_format(now(), '%Y-%m-%d') as currentdate");
+        $this->db->select("date_format(d.updated_at, '%Y-%m-%d') as updated_at");
         $this->db->from('connote c');
         $this->db->join('connote_customfield cc','c.connote_id = cc.connote_id','LEFT');
         $this->db->join('location_data_created ldc','c.connote_id = ldc.connote_id','LEFT');
+        $this->db->join('lasthistory d', 'c.connote_code = d.connote_code');
 
         if($reg == '00'){ //alll regional
             

@@ -47,24 +47,25 @@ class History extends REST_Controller{
                 curl_close($ch);
 
                 if(!$err){
-                    $connote_id         = $server_output['connote_id'];
-                    // $rescustome_field   = $server_output['connote_customfield'];    
-                    // $rescustome_field['connote_id'] = $connote_id;
-                    // $rescustome_field['user']   = $server_output['connote_customfield']['history_tracking']['user']['username'];
-                    // $rescustome_field['fullname']  = $server_output['connote_customfield']['history_tracking']['user']['full_name'];
+                    $connote_id                         = isset($server_output['connote_id']) ? $server_output['connote_id'] : '';
+                    if(strlen($connote_id) > 2){
+                        $reslocation_field                  = $server_output['location_data_created'];
+                        $reslocation_field['connote_id']    = $connote_id;
+                        
+                        //to update data delete first
+                        $this->db->delete('connote_customfield', array('connote_id' => $connote_id));
+                        $this->db->delete('location_data_created', array('connote_id' => $connote_id));
+                        $this->db->delete('connote', array('connote_id' => $connote_id)); 
+                        $this->db->delete('history', array('connote_code' => $server_output['connote_code']));
 
-                    // unset($rescustome_field['history_tracking']);
-                    
-                    $reslocation_field                  = $server_output['location_data_created'];
-                    $reslocation_field['connote_id']    = $connote_id;
+                        $custome_field[]        = $this->getCustomeField($server_output['connote_customfield'], $connote_id);
+                        $location[]             = $reslocation_field;
+                        $connote[]              = $this->getConnote($server_output);
 
-                    $custome_field[]        = $this->getCustomeField($server_output['connote_customfield'], $connote_id);
-                    $location[]             = $reslocation_field;
-                    $connote[]              = $this->getConnote($server_output);
-
-                    foreach($server_output['connote_history'] as $key){
-                        $exitingResi[] = $key['connote_code'];
-                        $history[] = $key;
+                        foreach($server_output['connote_history'] as $key){
+                            $exitingResi[] = $key['connote_code'];
+                            $history[] = $key;
+                        }
                     }
                 }
             }
@@ -101,7 +102,7 @@ class History extends REST_Controller{
 
     private function getConnote($data){
         return array(
-            'connote_id' => $data['connote_id'],
+            'connote_id' => isset($data['connote_id']) ? $data['connote_id'] : '',
             'connote_number' => $data['connote_number'],
             'connote_sender_name' => $data['connote_sender_name'],
             'connote_sender_phone' => $data['connote_sender_phone'],

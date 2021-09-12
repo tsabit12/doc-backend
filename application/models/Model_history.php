@@ -15,8 +15,8 @@ class Model_history extends CI_Model {
 
         // return $result;
 
-        $date   = date('ymd');
-        for ($x = 1; $x <= 1300; $x++) {
+        $date   = date('ymd', strtotime("-1 days"));
+        for ($x = 1; $x <= 60000; $x++) {
             $invID = str_pad($x, 7, '0', STR_PAD_LEFT);
             $resi[]   = 'P'.$date.''.$invID;
             $data = $resi;

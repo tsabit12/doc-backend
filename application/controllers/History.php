@@ -15,9 +15,9 @@ class History extends REST_Controller{
     public function index_get(){
         $response['status']     = false;
         $response['message']['global'] = 'Internal server error';
-
         //for now
-        $resi = $this->model_history->getResi();
+        $params = $this->get();
+        $resi = $this->model_history->getResi($params['date']);
         if(count($resi) > 0){
             $connote        = array();
             $custome_field  = array();

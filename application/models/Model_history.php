@@ -1,6 +1,6 @@
 <?php
 class Model_history extends CI_Model {
-    public function getResi(){
+    public function getResi($date){
         // $result = array();
         // $this->db->select('connote_code');
         // $this->db->from('connote');
@@ -15,8 +15,8 @@ class Model_history extends CI_Model {
 
         // return $result;
 
-        $date   = date('ymd', strtotime("-1 days"));
-        for ($x = 1500; $x <= 2000; $x++) {
+        //$date   = date('ymd', strtotime("-1 days"));
+        for ($x = 1; $x <= 500; $x++) {
             $invID = str_pad($x, 7, '0', STR_PAD_LEFT);
             $resi[]   = 'P'.$date.''.$invID;
             $data = $resi;

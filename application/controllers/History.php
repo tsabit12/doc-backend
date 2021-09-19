@@ -17,84 +17,94 @@ class History extends REST_Controller{
         $response['message']['global'] = 'Internal server error';
         //for now
         $params = $this->get();
-        $resi = $this->model_history->getResi($params['date']);
-        if(count($resi) > 0){
-            $connote        = array();
-            $custome_field  = array();
-            $history        = array();
-            $exitingResi    = array();
-            $location       = array();
+        if(!isset($params['date'])){
+            $response['message']['global'] = "Date is required";
+        }else{
+            $config = array(
+                array('field' => 'rangeawal', 'label' => 'Range awal', 'rules' => 'required|integer'),
+                array('field' => 'rangeakhir', 'label' => 'Range akhir', 'rules' => 'required|integer')
+            );
+            $this->form_validation->set_data($params);
+            $this->form_validation->set_rules($config);
+            if($this->form_validation->run() === FALSE){
+                $response['message'] = $this->form_validation->error_array();
+            }else{
+                $resi = $this->model_history->getResi($params);
+                if(count($resi) > 0){
+                    $connote        = array();
+                    $custome_field  = array();
+                    $history        = array();
+                    $exitingResi    = array();
+                    $location       = array();
 
-            foreach($resi as $key){
-                //$value = $key['connote_code'];
-                $value = $key;
-                $ch = curl_init();
+                    foreach($resi as $key){
+                        //$value = $key['connote_code'];
+                        $value = $key;
+                        $ch = curl_init();
 
-                curl_setopt($ch, CURLOPT_URL, 'https://apiexpos.mile.app/public/v1/connote/'.$value);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+                        curl_setopt($ch, CURLOPT_URL, 'https://apiexpos.mile.app/public/v1/connote/'.$value);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
 
 
-                $headers = array();
-                $headers[] = 'X-Api-Key: 04e5185fa9402cf4c06faac5dee754d40452f2c8';
-                $headers[] = 'Accept: application/';
-                $headers[] = 'Content-Type: application/';
-                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                        $headers = array();
+                        $headers[] = 'X-Api-Key: 04e5185fa9402cf4c06faac5dee754d40452f2c8';
+                        $headers[] = 'Accept: application/';
+                        $headers[] = 'Content-Type: application/';
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-                $server_output = json_decode(curl_exec($ch), true);
-                $err = curl_error($ch);
+                        $server_output = json_decode(curl_exec($ch), true);
+                        $err = curl_error($ch);
 
-                curl_close($ch);
+                        curl_close($ch);
 
-                if(!$err){
-                    $connote_id                         = isset($server_output['connote_id']) ? $server_output['connote_id'] : '';
-                    if(strlen($connote_id) > 2){
-                        $reslocation_field                  = $server_output['location_data_created'];
-                        $reslocation_field['connote_id']    = $connote_id;
-                        
-                        //to update data delete first
-                        $this->db->delete('connote_customfield', array('connote_id' => $connote_id));
-                        $this->db->delete('location_data_created', array('connote_id' => $connote_id));
-                        $this->db->delete('connote', array('connote_id' => $connote_id)); 
-                        $this->db->delete('history', array('connote_code' => $server_output['connote_code']));
+                        if(!$err){
+                            $connote_id                         = isset($server_output['connote_id']) ? $server_output['connote_id'] : '';
+                            if(strlen($connote_id) > 2){
+                                $reslocation_field                  = $server_output['location_data_created'];
+                                $reslocation_field['connote_id']    = $connote_id;
+                                
+                                //to update data delete first
+                                $this->db->delete('connote_customfield', array('connote_id' => $connote_id));
+                                $this->db->delete('location_data_created', array('connote_id' => $connote_id));
+                                $this->db->delete('connote', array('connote_id' => $connote_id)); 
+                                $this->db->delete('history', array('connote_code' => $server_output['connote_code']));
 
-                        $custome_field[]        = $this->getCustomeField($server_output['connote_customfield'], $connote_id);
-                        $location[]             = $reslocation_field;
-                        $connote[]              = $this->getConnote($server_output);
+                                $custome_field[]        = $this->getCustomeField($server_output['connote_customfield'], $connote_id);
+                                $location[]             = $reslocation_field;
+                                $connote[]              = $this->getConnote($server_output);
 
-                        foreach($server_output['connote_history'] as $key){
-                            $exitingResi[] = $key['connote_code'];
-                            $history[] = $key;
+                                foreach($server_output['connote_history'] as $key){
+                                    $exitingResi[] = $key['connote_code'];
+                                    $history[] = $key;
+                                }
+                            }
                         }
                     }
+
+                    
+                    // if(count($output) > 0){
+                    //     $this->db->where_in('connote_code', $exitingResi);
+                    //     $this->db->delete('history');
+                        
+                    //     $this->db->insert_batch('history', $output);
+                    //     if($this->db->affected_rows() > 0){
+                    //         $response['status'] = true;
+                    //         $response['message'] = new StdClass();
+                    //         $response['insterted'] = $this->db->affected_rows();
+                    //     }                
+                    // }
+                    
+
+                    $response['status']             = true;
+                    $response['message']['global']  = "".count($connote)." Resi berhasil di insert";
+
+                    $this->db->insert_batch('connote', $connote);
+                    $this->db->insert_batch('connote_customfield', $custome_field);
+                    $this->db->insert_batch('location_data_created', $location);
+                    $this->db->insert_batch('history', $history);
                 }
             }
-
-            
-            // if(count($output) > 0){
-            //     $this->db->where_in('connote_code', $exitingResi);
-            //     $this->db->delete('history');
-                
-            //     $this->db->insert_batch('history', $output);
-            //     if($this->db->affected_rows() > 0){
-            //         $response['status'] = true;
-            //         $response['message'] = new StdClass();
-            //         $response['insterted'] = $this->db->affected_rows();
-            //     }                
-            // }
-            
-
-            $response['status']         = true;
-            $response['message']        = new StdClass();
-            $response['history']        = $history;
-            $response['customefield']   = $custome_field;
-            $response['location']       = $location;
-            $response['connote']        = $connote;
-
-            $this->db->insert_batch('connote', $connote);
-            $this->db->insert_batch('connote_customfield', $custome_field);
-            $this->db->insert_batch('location_data_created', $location);
-            $this->db->insert_batch('history', $history);
         }
 
         $this->response($response, 200);

@@ -28,6 +28,21 @@ class Model_profile extends CI_Model {
         
         return $result;
     }
+
+    public function addToken($data){
+        $result = false;
+
+        $userid     = $data['userid'];
+        $token      = $data['token'];
+
+        $this->db->where('userid', $userid);
+        $this->db->update('users', array('token' => $token));
+        if($this->db->affected_rows() >= 0){
+            $result = true;
+        }
+
+        return $result;
+    }
 }
 
 ?>

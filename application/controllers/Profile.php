@@ -83,6 +83,37 @@ class Profile extends REST_Controller{
 
         $this->response($response, 200);
     }
+
+    public function token_post(){
+        $response['status'] = false;
+        $response['message']['global'] = 'Push token failed';
+
+        $data = $this->post();
+
+        if(!isset($data['userid'])){
+            $response['message']['global'] = "Userid required";
+        }else{
+            $config = array(
+                array('field' => 'token', 'label' => 'Token', 'rules' => 'required'),
+                array('field' => 'userid', 'label' => 'Userid', 'rules' => 'required|integer')
+            );
+            $this->form_validation->set_data($data);
+            $this->form_validation->set_rules($config);
+            if($this->form_validation->run() === FALSE){
+                $response['message'] = $this->form_validation->error_array();
+            }else{
+                $add = $this->model_profile->addToken($data);
+                if($add){
+                    $response['status'] = true;
+                    $response['message']['global'] = "Token has been updated";
+                }else{
+                    $response['message']['global'] = "Add token failed";
+                }
+            }
+        }
+
+        $this->response($response, 200);
+    }
 }
 
 ?>

@@ -157,11 +157,10 @@ class History extends REST_Controller{
             // 'tariff_formula_data' => $data['tariff_formula_data'],
             'formula_name' => $data['formula_name'],
             'create_from' => $data['create_from'],
-            'bags' => $data['bags'],
-            // 'connote_sender_custom_field' => $data['connote_sender_custom_field'],
-            'connote_sla_date' => $data['connote_sla_date'],
-            'total_discount' => $data['total_discount'],
-            'connote_code_' => $data['connote_code_'],
+            'bags' => isset($data['bags']) ? $data['bags'] : null,
+            'connote_sla_date' => isset($data['connote_sla_date']) ? $data['connote_sla_date'] : null,
+            'total_discount' => isset($data['total_discount']) ? $data['total_discount'] : null,
+            'connote_code_' => isset($data['connote_code_']) ? $data['connote_code_'] : $data['connote_code'],
         );
     }
 
@@ -209,7 +208,110 @@ class History extends REST_Controller{
     }
 
     public function push_post(){
-        
+        $response['status'] = false;
+        $response['message']['global'] = "Internal server error";
+
+        $data = $this->post();
+
+        $connote = $this->getConnote($data['connote']);
+        $location_data = array(
+            'connote_id' => $connote['connote_id'],
+            'location_id' => isset($data['location_id']) ? $data['location_id'] : null,
+            'location_name' => $connote['location_name'],
+            'location_parent_id' => null,
+            'location_type_id' => null,
+            'location_code' => isset($data['origin_data']['zone_code']) ? $data['origin_data']['zone_code'] : null,
+            'location_phone' => null,
+            'location_address' => isset($data['origin_data']['customer_address' ]) ? $data['origin_data']['customer_address'] : null,
+            'organization_id' => isset($data['origin_data']['organization_id' ]) ? $data['origin_data']['organization_id'] : null,
+            'created_at' => isset($data['created_at']) ? $data['created_at'] : null,
+            'updated_at' => isset($data['updated_at']) ? $data['updated_at'] : null,
+            'created_by' => $connote['created_by'],
+            'is_deleted' => 0,
+            'lat' => null,
+            'lon' => null,
+            'location_pickup_id' => null,
+            'location_type' => $connote['location_type'],
+            'location_code_mile' => null,
+            'attributes' => null,
+            'custom_field' => null
+        );
+        $custome_field = array(
+            'connote_id' => $connote['connote_id'],
+            'id_pelanggan_korporat' => isset($data['custom_field']['ID Pelanggan Korporat']) ? $data['custom_field']['ID Pelanggan Korporat'] : null,
+            'cn23' => 0,
+            'pph' => null,
+            'NONPPN' => null,
+            'COD' => isset($data['custom_field']['COD']) ? $data['custom_field']['COD'] : NULL,
+            'cod_value' => isset($data['custom_field']['cod_value']) ? $data['custom_field']['cod_value'] : NULL,
+            'fee_value' => isset($data['custom_field']['fee_value']) ? $data['custom_field']['fee_value'] : NULL,
+            'total_cod' => isset($data['custom_field']['total_cod']) ? $data['custom_field']['total_cod'] : NULL,
+            'lumpsum_connote_amount' => isset($data['custom_field']['lumpsum_connote_amount']) ? $data['custom_field']['lumpsum_connote_amount'] : NULL,
+            'expired_pks' => isset($data['custom_field']['expired_pks']) ? $data['custom_field']['expired_pks'] : NULL,
+            'minimumweight' => isset($data['custom_field']['minimumweight']) ? $data['custom_field']['minimumweight'] : NULL,
+            'pks_no' => isset($data['custom_field']['pks_no']) ? $data['custom_field']['pks_no'] : NULL,
+            'rekening_no' => isset($data['custom_field']['rekening_no']) ? $data['custom_field']['rekening_no'] : NULL,
+            'npwp_number' => isset($data['custom_field']['npwp_number']) ? $data['custom_field']['npwp_number'] : NULL,
+            'tariff_field' => isset($data['custom_field']['tariff_field']) ? $data['custom_field']['tariff_field'] : NULL,
+            'Jenis_Barang' => isset($data['custom_field']['Jenis_Barang']) ? $data['custom_field']['Jenis_Barang'] : NULL,
+            'ref_no' => isset($data['custom_field']['ref_no']) ? $data['custom_field']['ref_no'] : NULL,
+            'instruksi_pengiriman' => isset($data['custom_field']['instruksi_pengiriman']) ? $data['custom_field']['instruksi_pengiriman'] : NULL,
+            'location_name' => $connote['location_name'],
+            'location_id' => isset($data['location_id']) ? $data['location_id'] : null,
+            'nopen' => isset($data['origin_data']['zone_code']) ? $data['origin_data']['zone_code'] : null,
+            'user' => isset($data['currentLocation']['username']) ? $data['currentLocation']['username'] : null,
+            'fullname' => isset($data['currentLocation']['full_name']) ? $data['currentLocation']['full_name'] : null,
+            'nokprk' => isset($data['origin_data']['zone_code']) ? $data['origin_data']['zone_code'] : null,
+            'regional' => $this->model_history->getReg($data['origin_data'])
+        );
+        $history = array();
+
+        if(isset($data['connote']['history'])){
+            foreach($data['connote']['history'] as $key){
+                $history[] = array(
+                    'connote_code' => $connote['connote_code'],
+                    'created_at' => $key['date'],
+                    'updated_at' => $key['date'],
+                    'content' => $key['content'],
+                    'action' => $key['action'],
+                    'id' => null,
+                    'date' => $key['date'],
+                    'connote_state' => $key['state'],
+                    'location_name' => isset($key['user']['location_name']) ? $key['user']['location_name'] : null,
+                    'username' => isset($key['user']['username']) ? $key['user']['username'] : null,
+                    'is_hide' => 0,
+                    'coordinate' => $key['coordinate']
+                );
+            }
+        }
+
+        //checking the existing data 
+        $isExist = $this->model_history->checkExistingData($connote['connote_id']);
+        if($isExist){
+            //only update history by delete first
+            $this->db->delete('history', array('connote_code' => $connote['connote_code']));
+            $this->db->insert_batch('history', $history);
+            if($this->db->affected_rows() > 0){
+                $response['status'] = true;
+                $response['message']['global'] = "".count($history)." data history updated!";
+            }else{
+                $response['message']['global'] = "Update failed";
+            }
+        }else{
+            $this->db->insert('connote', $connote);
+            $this->db->insert('connote_customfield', $custome_field);
+            $this->db->insert('location_data_created', $location_data);
+            $this->db->insert_batch('history', $history);
+
+            if($this->db->affected_rows() > 0){
+                $response['status'] = true;
+                $response['message']['global'] = "Insert Success!";
+            }else{
+                $response['message']['global'] = "Insert failed";
+            }
+        }
+
+        $this->response($response, 200);
     }
 }
 

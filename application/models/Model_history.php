@@ -27,5 +27,35 @@ class Model_history extends CI_Model {
 
         return $data;
     }
+
+    public function getReg($origin){
+        $result = null;
+        if(isset($origin['zone_code'])){
+            $kprk = $origin['zone_code'];
+            $this->db->select('regionid');
+            // select regionid from office o
+            $this->db->from('office');
+            $this->db->where('officeid', $kprk);
+            $q = $this->db->get();
+            if($q->num_rows() > 0){
+                $data = $q->row_array();
+                $result = $data['regionid'];
+            }
+        }
+
+        return $result;
+    }
+
+    public function checkExistingData($connote_id){
+        $this->db->from('connote');
+        $this->db->where('connote_id', $connote_id);
+
+        $q = $this->db->get();
+        if($q->num_rows() > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
 ?>

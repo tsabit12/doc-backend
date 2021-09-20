@@ -404,7 +404,7 @@ $config['rest_key_name'] = 'X-POS-KEY';
 |   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
-$config['rest_enable_logging'] = FALSE;
+$config['rest_enable_logging'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -415,7 +415,7 @@ $config['rest_enable_logging'] = FALSE;
 | table name to match e.g. my_logs
 |
 */
-$config['rest_logs_table'] = 'logs';
+$config['rest_logs_table'] = 'pidlogs';
 
 /*
 |--------------------------------------------------------------------------

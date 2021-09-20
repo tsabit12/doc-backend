@@ -208,8 +208,8 @@ class History extends REST_Controller{
     }
 
     public function push_post(){
-        $response['status'] = false;
-        $response['message']['global'] = "Internal server error";
+        $response['Status'] = 'Gagal';
+        $response['Code']   = "99";
 
         $data = $this->post();
 
@@ -292,7 +292,8 @@ class History extends REST_Controller{
             $this->db->delete('history', array('connote_code' => $connote['connote_code']));
             $this->db->insert_batch('history', $history);
             if($this->db->affected_rows() > 0){
-                $response['status'] = true;
+                $response['Status'] = 'Berhasil';
+                $response['Code']   = '000';
                 $response['message']['global'] = "".count($history)." data history updated!";
             }else{
                 $response['message']['global'] = "Update failed";
@@ -304,7 +305,8 @@ class History extends REST_Controller{
             $this->db->insert_batch('history', $history);
 
             if($this->db->affected_rows() > 0){
-                $response['status'] = true;
+                $response['Status'] = 'Berhasil';
+                $response['Code']   = '000';
                 $response['message']['global'] = "Insert Success!";
             }else{
                 $response['message']['global'] = "Insert failed";

@@ -17,12 +17,14 @@ class History extends REST_Controller{
         $response['message']['global'] = 'Internal server error';
         //for now
         $params = $this->get();
+        $types  = isset($params['type']) ? $params['type'] : '';
         if(!isset($params['date'])){
             $response['message']['global'] = "Date is required";
         }else{
             $config = array(
                 array('field' => 'rangeawal', 'label' => 'Range awal', 'rules' => 'required|integer'),
-                array('field' => 'rangeakhir', 'label' => 'Range akhir', 'rules' => 'required|integer')
+                array('field' => 'rangeakhir', 'label' => 'Range akhir', 'rules' => 'required|integer'),
+                array('field' => 'type', 'label' => 'type', 'rules' => "required|callback_validatetype[$types]")
             );
             $this->form_validation->set_data($params);
             $this->form_validation->set_rules($config);
@@ -97,6 +99,7 @@ class History extends REST_Controller{
                     
 
                     $response['status']             = true;
+                    $response['resi']               = $resi;
                     $response['message']['global']  = "".count($connote)." Resi berhasil di insert";
 
                     $this->db->insert_batch('connote', $connote);
@@ -314,6 +317,20 @@ class History extends REST_Controller{
         }
 
         $this->response($response, 200);
+    }
+
+    public function validatetype($type){
+        if($type == ''){
+            $this->form_validation->set_message('validatetype', 'Type required');
+            return false;
+        }else{
+            if($type == 'oncreate' || $type == 'onupdate'){
+                return true;
+            }else{
+                $this->form_validation->set_message('validatetype', 'Type must in onupadate or oncreate');
+                return false;
+            }
+        }
     }
 }
 

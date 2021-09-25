@@ -4,28 +4,31 @@ class Model_history extends CI_Model {
         $date = $params['date'];
         $rangeawal = $params['rangeawal'];
         $rangeakhir = $params['rangeakhir'];
-        // $result = array();
-        // $this->db->select('connote_code');
-        // $this->db->from('connote');
-        // $this->db->where('connote_code is not null', null, false);
-        // $this->db->where("DATE_FORMAT(created_at, '%Y%m%d') = DATE_FORMAT(NOW() , '%Y%m%d')", null, false);
-        // $this->db->limit(2);
+        $type       = $params['type'];
 
-        // $q = $this->db->get();
-        // if($q->num_rows() > 0){
-        //     $result = $q->result_array();
-        // }
+        if($type === 'onupdate'){
+            $result = array();
+            $this->db->select('connote_code');
+            $this->db->from('v_connotenotfinish');
 
-        // return $result;
+            $q = $this->db->get();
+            if($q->num_rows() > 0){
+                $data = $q->result_array();
+                foreach($data as $key){
+                    $result[] = $key['connote_code'];
+                }
+            }
 
-        //$date   = date('ymd', strtotime("-1 days"));
-        for ($x = $rangeawal; $x <= $rangeakhir; $x++) {
-            $invID = str_pad($x, 7, '0', STR_PAD_LEFT);
-            $resi[]   = 'P'.$date.''.$invID;
-            $data = $resi;
+            return $result;
+        }else{
+            for ($x = $rangeawal; $x <= $rangeakhir; $x++) {
+                $invID = str_pad($x, 7, '0', STR_PAD_LEFT);
+                $resi[]   = 'P'.$date.''.$invID;
+                $data = $resi;
+            }
+    
+            return $data;
         }
-
-        return $data;
     }
 
     public function getReg($origin){

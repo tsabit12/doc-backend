@@ -20,7 +20,7 @@ class Profile extends REST_Controller{
             $config['upload_path']          = './assets/profile/';
             $config['allowed_types']        = 'jpg|png|jpeg';
             $config['overwrite']			= FALSE;
-            $config['max_size']             = 3024; //3 MB
+            $config['max_size']             = 9024; //9 MB
             $config['allowed_types']        = '*';
             $config['remove_spaces']        = TRUE;
             $config['encrypt_name']         = TRUE;

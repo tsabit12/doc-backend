@@ -13,15 +13,33 @@ class Jatuhtempo extends REST_Controller{
         $response['status'] = false;
         $response['message']['global'] = "Data tidak ditemukan";
 
-        //the report is need like this
-        //total = 80
-        //on time = 100
-        //jatuh tempo = 92
-        //over sla = 20
-        //menginap = 10
-        //and then for the chart
-        //count resi by reg, kprk, agenpos (next)
+        $params = $this->get();
+        if(!isset($params['regional'])){
+            $response['message']['global'] = "Regional is required";
+        }else{
+            $config = array(
+                array('field' => 'regional', 'label' => 'Reg', 'rules' => 'required|max_length[10]'),
+                array('field' => 'kprk', 'label' => 'Kprk', 'rules' => 'required|max_length[10]'),
+                array('field' => 'startdate', 'label' => 'Startdate', 'rules' => 'required|max_length[12]'),
+                array('field' => 'enddate', 'label' => 'Enddate', 'rules' => 'required|max_length[12]')
+            );
 
+            $this->form_validation->set_data($params);
+            $this->form_validation->set_rules($config);
+
+            if($this->form_validation->run() === FALSE){
+                $response['message'] = $this->form_validation->error_array();
+            }else{
+                $data = $this->model_jatuhtempo->get($params);
+                if($data['exist']){
+                    $response['status'] = true;
+                    $response['message'] = new StdClass();
+                    $response['data'] = $data['result'];
+                }else{
+                    $response['message']['global'] = 'Data tidak ditemukan';
+                }
+            }
+        }
 
         $this->response($response, 200);
     }

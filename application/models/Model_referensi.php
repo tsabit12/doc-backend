@@ -9,7 +9,7 @@ class Model_referensi extends CI_Model {
             'regionid' => $regional,
             'officetype' => 'KPRK'
         ));
-        $this->db->order_by('officename asc');
+        $this->db->order_by('kprk asc');
 
         $q = $this->db->get();
         if($q->num_rows() > 0){

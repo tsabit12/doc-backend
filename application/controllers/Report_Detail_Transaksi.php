@@ -12,11 +12,6 @@ class Report_Detail_Transaksi extends REST_Controller{
         $response['status'] = false; //default status
         $response['message']['global'] = 'Data tidak ditemukan'; //default message is object 
 
-        // $regional       = $this->post('regional');
-        // $kprk         = $this->post('kprk');
-        // $start          = $this->post('startdate');
-        // $end            = $this->post('enddate');
-
         $body = $this->post();
 
         if(!isset($body['regional'])){
@@ -26,8 +21,7 @@ class Report_Detail_Transaksi extends REST_Controller{
                 array('field' => 'kprk', 'label' => 'kprk', 'rules' => 'required|max_length[6]'),
                 array('field' => 'regional', 'label' => 'regional', 'rules' => 'required|max_length[6]'),
                 array('field' => 'startdate', 'label' => 'startdate', 'rules' => 'required'),
-                array('field' => 'enddate', 'label' => 'enddate', 'rules' => 'required'),
-                array('field' => 'status', 'label' => 'Status', 'rules' => 'required'),
+                array('field' => 'enddate', 'label' => 'enddate', 'rules' => 'required')
             );
             $this->form_validation->set_data($body);
             $this->form_validation->set_rules($config);
@@ -46,19 +40,6 @@ class Report_Detail_Transaksi extends REST_Controller{
             }
 
         }
-
-        // if($regional != ''){ //cek if data is extis
-        //     //then return status true
-        //     $q  = $this->regional($regional,$start, $end);
-        //     $response['status'] = true;
-        //     $response['message']['global'] = new StdClass(); //must in object, if no message create empty object
-        //     $response['result']  = $q;
-        //  }else{
-        //     $q  = $this->all($start, $end);
-        //     $response['status'] = true;
-        //     $response['message']['global'] = new StdClass(); //must in object, if no message create empty object
-        //     $response['result']  = $q;
-        // }
         
         $this->response($response, 200);
 

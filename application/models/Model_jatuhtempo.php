@@ -9,18 +9,18 @@ class Model_jatuhtempo extends CI_Model {
         $startdate = $params['startdate'];
         $enddate = $params['enddate'];
         
-        $this->db->select('types, region, nopend, service, sum(total) as jumlah');
+        $this->db->select('types, regionid as region, location_code as nopend, connote_service as service, sum(total) as jumlah');
         $this->db->from('summary');
-        $this->db->group_by(array('types', 'region', 'nopend', 'service'));
+        $this->db->group_by(array('types', 'regionid', 'location_code', 'connote_service'));
         
         $this->db->where('periode >=', $startdate);
         $this->db->where('periode <=', $enddate);
 
         if($reg != '00'){ //not nasional 
             if($kprk == '00'){ //current regional with all kprk
-                $this->db->where('region', $reg);
+                $this->db->where('regionid', $reg);
             }else{
-                $this->db->where('nopend', $kprk);
+                $this->db->where('location_code', $kprk);
             }
         }
 

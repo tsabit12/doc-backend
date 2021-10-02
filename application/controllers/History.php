@@ -117,7 +117,7 @@ class History extends REST_Controller{
         $created_at = isset($data['created_at']) ? date('Y-m-d h:i:s', strtotime($data['created_at'])) : $this->getcreatedat($sla_day, $sla_date);
         $history    = isset($data['connote_history']) ? $data['connote_history'] : array();
         $office     = isset($data['location_data_created']['location_code']) ? $data['location_data_created']['location_code'] : '00';
-        $regional   = isset($data['connote_customfield']['regional']) ? $data['connote_customfield']['regional'] : '00';
+        $regional   = isset($data['connote_customfield']['regional']) ? $data['connote_customfield']['regional'] : $this->model_history->getRegByOffice($office);
         $last       = $this->getHistory($history);
 
         $result = array(
@@ -139,7 +139,7 @@ class History extends REST_Controller{
 
         return $result;
     }
-    
+
     public function validatetype($type){
         if($type == ''){
             $this->form_validation->set_message('validatetype', 'Type required');

@@ -49,6 +49,23 @@ class Model_history extends CI_Model {
         return $result;
     }
 
+    public function getRegByOffice($office){
+        $result = 0;
+        if($office){
+            $this->db->select('regionid');
+            // select regionid from office o
+            $this->db->from('office');
+            $this->db->where('officeid', $office);
+            $q = $this->db->get();
+            if($q->num_rows() > 0){
+                $data = $q->row_array();
+                $result = $data['regionid'];
+            }
+        }
+
+        return $result;
+    }
+
     public function checkExistingData($connote_id){
         $this->db->from('connote');
         $this->db->where('connote_id', $connote_id);

@@ -134,7 +134,8 @@ class History extends REST_Controller{
             'location_region' => $regional,
             'last_connote_state' => isset($last['connote_state']) ? strtoupper($last['connote_state']) : 'UNKNOWN',
             'last_connote_update' =>  isset($last['updated_at']) ? date('Y-m-d h:i:s', strtotime($last['updated_at'])) : null,
-            'last_connote_created' => isset($last['created_at']) ? date('Y-m-d h:i:s', strtotime($last['created_at'])) : null
+            'last_connote_created' => isset($last['created_at']) ? date('Y-m-d h:i:s', strtotime($last['created_at'])) : null,
+            'chargeable_weight' => isset($data['chargeable_weight']) ? $data['chargeable_weight'] : 0
         );
 
         return $result;

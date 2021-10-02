@@ -25,21 +25,19 @@ class Model_reportdetail extends CI_Model {
 
         $whereValues = array();
 
-        $this->db->select("r.regionid as region, b.location_code, c.connote_service, COUNT(c.connote_code) as total, SUM(c.chargeable_weight) as berat, SUM(c.connote_service_price) as ongkir");
-        $this->db->from('connote c');
-        $this->db->join('location_data_created b', 'c.connote_id = b.connote_id');
-        $this->db->join('office r','b.location_code = r.kprk');
+        $this->db->select('location_region as region, location_code, connote_service, count(connote_code) as total, sum(chargeable_weight) as berat, sum(connote_service_price) as ongkir');
+        $this->db->from('dashboard d');
 
-        $this->db->group_by(array('r.regionid', 'b.location_code', 'c.connote_service'));
+        $this->db->group_by(array('d.location_region', 'd.location_code', 'd.connote_service'));
 
-        $this->db->where("DATE_FORMAT(c.created_at, '%Y-%m-%d') >=", $startdate);
-        $this->db->where("DATE_FORMAT(c.created_at, '%Y-%m-%d') <=", $enddate);
+        $this->db->where("to_char(d.created_at, 'YYYY-MM-DD') >=", $startdate);
+        $this->db->where("to_char(d.created_at, 'YYYY-MM-DD') <=", $enddate);
 
         if($reg != '00'){ //not nasional 
             if($kprk == '00'){ //current regional with all kprk
-                $this->db->where('r.regionid', $reg);
+                $this->db->where('d.location_region', $reg);
             }else{
-                $this->db->where('r.location_code', $kprk);
+                $this->db->where('d.location_code', $kprk);
             }
         }
     }

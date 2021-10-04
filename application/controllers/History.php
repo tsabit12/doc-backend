@@ -57,31 +57,41 @@ class History extends REST_Controller{
                         curl_close($ch);
 
                         if(!$err){
-                            $connote_id                         = isset($server_output['connote_id']) ? $server_output['connote_id'] : '';
-                            $connote_code                         = isset($server_output['connote_code']) ? $server_output['connote_code'] : '';
-                            if(strlen($connote_id) > 2){ //makesure code is not empty string
-                                //to update data delete first
-                                $this->db->delete('dashboard', array('connote_id' => $connote_id));
-                                $this->db->delete('jsons', array('connote_id' => $connote_id));
+                            if(isset($server_output['message'])){ //data not found
+                                //$response['message']
+                                // print_r(array("kosong"));
+                            }else{
+                                $connote_id                         = isset($server_output['connote_id']) ? $server_output['connote_id'] : '';
+                                $connote_code                         = isset($server_output['connote_code']) ? $server_output['connote_code'] : '';
+                                if(strlen($connote_id) > 2){ //makesure code is not empty string
+                                    //to update data delete first
+                                    $this->db->delete('dashboard', array('connote_id' => $connote_id));
+                                    $this->db->delete('jsons', array('connote_id' => $connote_id));
 
-                                //save log
-                                $this->db->insert('jsons', array(
-                                    'connote_id' => $connote_id,
-                                    'history' => json_encode($server_output['connote_history']),
-                                    'fullbody' => json_encode($server_output),
-                                    'connote_code' => $connote_code
-                                ));
+                                    //save log
+                                    $this->db->insert('jsons', array(
+                                        'connote_id' => $connote_id,
+                                        'history' => json_encode($server_output['connote_history']),
+                                        'fullbody' => json_encode($server_output),
+                                        'connote_code' => $connote_code
+                                    ));
 
-                                //insert method here
-                                $connote[]              = $this->getConnote($server_output);
+                                    //insert method here
+                                    $connote[]              = $this->getConnote($server_output);
+                                }
                             }
                         }
                     }
 
-                    $this->db->insert_batch('dashboard', $connote);
-                    if($this->db->affected_rows() > 0){
-                        $response['status']             = true;
-                        $response['message']['global']  = "".count($connote)." Resi berhasil di insert";
+                    if(count($connote) > 0){
+                        $this->db->insert_batch('dashboard', $connote);
+                        if($this->db->affected_rows() > 0){
+                            $response['status']             = true;
+                            $response['message']['global']  = "".count($connote)." Resi berhasil di insert";
+                        }
+                    }else{
+                        $response['message']['global'] = "Data tidak ditemukan";
+                        $response['resi'] = $resi;
                     }
                 }
             }

@@ -9,7 +9,7 @@ class Model_history extends CI_Model {
         if($type === 'onupdate'){
             $result = array();
             $this->db->select('connote_code');
-            $this->db->from('v_connotenotfinish');
+            $this->db->from('v_pendingconnote');
 
             $q = $this->db->get();
             if($q->num_rows() > 0){

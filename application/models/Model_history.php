@@ -6,10 +6,14 @@ class Model_history extends CI_Model {
         $rangeakhir = $params['rangeakhir'];
         $type       = $params['type'];
 
-        if($type === 'onupdate'){
+        if($type == 'onupdate' || $type == 'deliveryrunsheet'){
             $result = array();
             $this->db->select('connote_code');
-            $this->db->from('v_pendingconnote');
+            if($type == 'deliveryrunsheet'){
+                $this->db->from('v_updatedrs');
+            }else{
+                $this->db->from('v_pendingconnote');
+            }
 
             $q = $this->db->get();
             if($q->num_rows() > 0){

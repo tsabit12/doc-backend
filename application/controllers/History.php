@@ -156,7 +156,7 @@ class History extends REST_Controller{
             $this->form_validation->set_message('validatetype', 'Type required');
             return false;
         }else{
-            if($type == 'oncreate' || $type == 'onupdate'){
+            if($type == 'oncreate' || $type == 'onupdate' || $type == 'deliveryrunsheet'){
                 return true;
             }else{
                 $this->form_validation->set_message('validatetype', 'Type must in onupadate or oncreate');

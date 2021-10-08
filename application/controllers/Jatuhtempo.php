@@ -33,7 +33,7 @@ class Jatuhtempo extends REST_Controller{
                 $data = $this->model_jatuhtempo->get($params);
                 if($data['exist']){
                     $response['status'] = true;
-                    //$response['message'] = new StdClass();
+                    $response['message'] = new StdClass();
                     $response['data'] = $data['result'];
                 }else{
                     $response['message']['global'] = 'Data tidak ditemukan';

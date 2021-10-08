@@ -16,13 +16,13 @@ class Model_jatuhtempo extends CI_Model {
         $this->db->where('periode >=', $startdate);
         $this->db->where('periode <=', $enddate);
 
-        // if($reg != '00'){ //not nasional 
-        //     if($kprk == '00'){ //current regional with all kprk
-        //         $this->db->where('regionid', $reg);
-        //     }else{
-        //         $this->db->where('location_code', $kprk);
-        //     }
-        // }
+        if($reg != '00'){ //not nasional 
+            if($kprk == '00'){ //current regional with all kprk
+                $this->db->where('regionid', $reg);
+            }else{
+                $this->db->where('location_code', $kprk);
+            }
+        }
 
         $q = $this->db->get();
         if($q->num_rows() > 0){

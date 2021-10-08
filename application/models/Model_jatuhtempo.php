@@ -27,7 +27,7 @@ class Model_jatuhtempo extends CI_Model {
         $q = $this->db->get();
         if($q->num_rows() > 0){
             $result['exist'] = true;
-            //$result['result'] = $q->result_array();
+            $result['result'] = $q;
         }
 
         return $result;

@@ -32,6 +32,7 @@ class History extends REST_Controller{
                 $response['message'] = $this->form_validation->error_array();
             }else{
                 $resi = $this->model_history->getResi($params);
+                $countnya  = 0;
                 if(count($resi) > 0){
                     $connote        = array();
                     $exitingResi    = array();
@@ -77,22 +78,29 @@ class History extends REST_Controller{
                                     ));
 
                                     //insert method here
-                                    $connote[]              = $this->getConnote($server_output);
+                                    $connote  = $this->getConnote($server_output);
+                                    $this->db->insert('dashboard', $connote);
+                                    if($this->db->affected_rows() > 0){
+                                        ++$countnya;
+                                    }
                                 }
                             }
                         }
                     }
 
-                    if(count($connote) > 0){
-                        $this->db->insert_batch('dashboard', $connote);
-                        if($this->db->affected_rows() > 0){
-                            $response['status']             = true;
-                            $response['message']['global']  = "".count($connote)." Resi berhasil di insert";
-                        }
-                    }else{
-                        $response['message']['global'] = "Data tidak ditemukan";
-                        $response['resi'] = $resi;
-                    }
+                    $response['status'] = true;
+                    $response['message']['global'] = "".$countnya." resi berhasil diinsert";
+
+                    // if(count($connote) > 0){
+                    //     $this->db->insert_batch('dashboard', $connote);
+                    //     if($this->db->affected_rows() > 0){
+                    //         $response['status']             = true;
+                    //         $response['message']['global']  = "".count($connote)." Resi berhasil di insert";
+                    //     }
+                    // }else{
+                    //     $response['message']['global'] = "Data tidak ditemukan";
+                    //     $response['resi'] = $resi;
+                    // }
                 }
             }
         }

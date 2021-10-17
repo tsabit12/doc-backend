@@ -23,7 +23,7 @@ Class Model_user extends CI_Model{
           $result['exist'] = false;
           $level = $params['level'];
 
-          $this->db->select('a.userid, a.username, a.email, b.roledescription, b.roleid, c.officeid, c.officename, a.image, a.created_at');
+          $this->db->select('a.userid, a.fullname, a.username, a.email, b.roledescription, b.roleid, c.officeid, c.officename, a.image, a.created_at');
           $this->db->from('users a');
           $this->db->join('ref_role b', 'a.roleid = b.roleid');
           $this->db->join('office c', 'a.office = c.officeid');

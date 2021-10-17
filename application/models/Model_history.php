@@ -12,7 +12,7 @@ class Model_history extends CI_Model {
             if($type == 'deliveryrunsheet'){
                 $this->db->from('v_updatedrs');
             }else{
-                $this->db->from('v_pendingconnote');
+                $this->db->from('v_connotenew');
             }
 
             $q = $this->db->get();

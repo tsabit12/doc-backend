@@ -11,7 +11,7 @@ class Push extends CI_Controller{
 
           ob_end_clean();
 
-          apache_setenv('no-gzip', 1);
+          //apache_setenv('no-gzip', 1);
           ini_set('zlib.output_compression', 0);
           ini_set('implicit_flush', 1);
           header("Content-Encoding: none");

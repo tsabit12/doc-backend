@@ -172,6 +172,19 @@ class History extends REST_Controller{
             }
         }
     }
+
+    public function refresh_post(){
+        $response['status'] = false;
+        $response['message']['global'] = "Refresh failed";
+
+        $sql = $this->db->query("REFRESH MATERIALIZED VIEW summary");
+        if($sql){
+            $response['status'] = true;
+            $response['message']['global'] = "oke";
+        }
+
+        $this->response($response, 200);
+    }
 }
 
 ?>

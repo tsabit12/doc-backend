@@ -19,9 +19,7 @@ class Jatuhtempo extends REST_Controller{
         }else{
             $config = array(
                 array('field' => 'regional', 'label' => 'Reg', 'rules' => 'required|max_length[10]'),
-                array('field' => 'kprk', 'label' => 'Kprk', 'rules' => 'required|max_length[10]'),
-                array('field' => 'startdate', 'label' => 'Startdate', 'rules' => 'required|max_length[12]'),
-                array('field' => 'enddate', 'label' => 'Enddate', 'rules' => 'required|max_length[12]')
+                array('field' => 'kprk', 'label' => 'Kprk', 'rules' => 'required|max_length[10]')
             );
 
             $this->form_validation->set_data($params);

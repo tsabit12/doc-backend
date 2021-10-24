@@ -90,17 +90,6 @@ class History extends REST_Controller{
 
                     $response['status'] = true;
                     $response['message']['global'] = "".$countnya." resi berhasil diinsert";
-
-                    // if(count($connote) > 0){
-                    //     $this->db->insert_batch('dashboard', $connote);
-                    //     if($this->db->affected_rows() > 0){
-                    //         $response['status']             = true;
-                    //         $response['message']['global']  = "".count($connote)." Resi berhasil di insert";
-                    //     }
-                    // }else{
-                    //     $response['message']['global'] = "Data tidak ditemukan";
-                    //     $response['resi'] = $resi;
-                    // }
                 }
             }
         }
@@ -128,6 +117,15 @@ class History extends REST_Controller{
         }
     }
 
+    private function getStatuslist($arr){
+        $status = array();
+        foreach($arr as $key){
+            $status[] = strtoupper($key['action']);
+        }
+
+        return implode(',', $status);
+    }
+
     private function getConnote($data){
         $create     = isset($data['created_at']) ? date('Y-m-d h:i:s', strtotime($data['created_at'])) : date('Y-m-d h:i:s');
         $sla_day    = isset($data['connote_sla_day']) ? (int)$data['connote_sla_day'] : 0;
@@ -153,7 +151,8 @@ class History extends REST_Controller{
             'last_connote_state' => isset($last['connote_state']) ? strtoupper($last['connote_state']) : 'UNKNOWN',
             'last_connote_update' =>  isset($last['updated_at']) ? date('Y-m-d h:i:s', strtotime($last['updated_at'])) : null,
             'last_connote_created' => isset($last['created_at']) ? date('Y-m-d h:i:s', strtotime($last['created_at'])) : null,
-            'chargeable_weight' => isset($data['chargeable_weight']) ? $data['chargeable_weight'] : 0
+            'chargeable_weight' => isset($data['chargeable_weight']) ? $data['chargeable_weight'] : 0,
+            'list_status' => $this->getStatuslist($history)
         );
 
         return $result;

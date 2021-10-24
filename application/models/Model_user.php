@@ -19,7 +19,7 @@ Class Model_user extends CI_Model{
           return $result;
      }
 
-     private function queryuser($params){
+     private function queryuser($params, $userid = null){
           $result['exist'] = false;
           $level = $params['level'];
 
@@ -28,7 +28,10 @@ Class Model_user extends CI_Model{
           $this->db->join('ref_role b', 'a.roleid = b.roleid');
           $this->db->join('office c', 'a.office = c.officeid');
           $this->db->order_by('a.created_at', 'desc');
-          $this->db->limit($params['limit'], $params['offset']);
+
+          if($userid == null){
+               $this->db->limit($params['limit'], $params['offset']);
+          }
 
           if($level !== 'all'){
                $this->db->where('a.roleid', $level);
@@ -37,7 +40,7 @@ Class Model_user extends CI_Model{
           $q = $this->db->get();
           if($q->num_rows() > 0){
                $result['exist']    = true;
-               $result['data']     = $q->result_array();
+               $result['data']     = $userid ? $q->row_array() : $q->result_array();
           }
 
           return $result;
@@ -60,6 +63,44 @@ Class Model_user extends CI_Model{
           }
 
           return $result;
+     }
+
+     public function add($data){
+          $result['success'] = false;
+
+          $userid = $this->getUserid();
+          $this->db->insert('users', array(
+               'userid' => $userid,
+               'username' => $data['username'],
+               'fullname' => $data['fullname'],
+               'email' => $data['email'],
+               'roleid' => $data['roleid'],
+               'office' => $data['office'],
+               'password' => md5($data['password']."-".$userid),
+               'created_by' => $data['created_by']
+          ));
+
+          if($this->db->affected_rows() > 0){
+               $result['success'] = true;
+               $result['user'] = $this->queryuser(array('level' => 'all'), $userid)['data'];
+          }
+
+          return $result;
+     }
+
+     private function getUserid(){
+          $this->db->select('userid');
+          $this->db->from('users');
+          $this->db->order_by('userid', 'desc');
+          $this->db->limit(1);
+
+          $q = $this->db->get();
+          if($q->num_rows() > 0){
+               $data = $q->row_array();
+               return (int)$data['userid'] + 1;
+          }else{
+               return 1;
+          }
      }
 }
 

@@ -69,13 +69,22 @@ class Push extends CI_Controller{
           return date('Y-m-d h:i:s', strtotime($createdat . " +$day day"));
       }
 
-      private function getHistory($arr){
+     private function getHistory($arr){
           if(count($arr) > 0){
               return end($arr);
           }else{
               return $arr;
           }
-      }
+     }
+
+     private function getStatuslist($arr){
+          $status = array();
+          foreach($arr as $key){
+              $status[] = strtoupper($key['action']);
+          }
+  
+          return implode(',', $status);
+     }
 
      private function getconnote($data){
           $history    = isset($data['connote']['history']) ? $data['connote']['history'] : array();
@@ -100,7 +109,8 @@ class Push extends CI_Controller{
                'location_region' => $this->model_history->getReg($data['origin_data']),
                'last_connote_state' => isset($last['state']) ? strtoupper($last['state']) : 'UNKNOWN',
                'last_connote_update' =>  isset($last['date']) ? date('Y-m-d h:i:s', strtotime($last['date'])) : null,
-               'last_connote_created' => isset($last['date']) ? date('Y-m-d h:i:s', strtotime($last['date'])) : null
+               'last_connote_created' => isset($last['date']) ? date('Y-m-d h:i:s', strtotime($last['date'])) : null,
+               'list_status' => $this->getStatuslist($history)
           );
 
           return $result;

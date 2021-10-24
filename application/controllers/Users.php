@@ -61,6 +61,46 @@ Class Users extends REST_Controller{
                }
           }
      }
+
+     public function index_post(){
+          $response['status'] = false;
+          $response['message']['global'] = "Internal server error";
+
+          $data = $this->post();
+
+          if(!isset($data['username'])){
+               unset($response['message']['global']);
+               $response['message']['username'] = "Username is required";
+          }else{
+               $config = array(
+                    array('field' => 'username', 'label' => 'Username', 'rules' => 'required|max_length[15]|is_unique[users.username]'),
+                    array('field' => 'fullname', 'label' => 'Fullname', 'rules' => 'required|max_length[70]'),
+                    array('field' => 'roleid', 'label' => 'Role', 'rules' => 'required|max_length[1]'),
+                    array('field' => 'office', 'label' => 'Office', 'rules' => 'required'),
+                    array('field' => 'password', 'label' => 'Password', 'rules' => 'required'),
+                    array('field' => 'email', 'label' => 'Email', 'rules' => 'required|valid_email|is_unique[users.email]'),
+                    array('field' => 'created_by', 'label' => 'createdby', 'rules' => 'required')
+               );
+               $this->form_validation->set_data($data);
+               $this->form_validation->set_rules($config);
+               $this->form_validation->set_message('is_unique', '{field} sudah terdaftar');
+
+               if($this->form_validation->run() === FALSE){
+                    $response['message'] = $this->form_validation->error_array();
+               }else{
+                    $add = $this->model_user->add($data);
+                    if($add['success']){
+                         $response['status']      = true;
+                         $response['message']     = new StdClass();
+                         $response['user']        = $add['user'];
+                    }else{
+                         $response['message']['global'] = "Add user failed!";
+                    }
+               }
+          }
+
+          $this->response($response, 200);
+     }
 }
 
 ?>

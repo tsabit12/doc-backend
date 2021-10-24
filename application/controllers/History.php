@@ -176,7 +176,7 @@ class History extends REST_Controller{
         $response['status'] = false;
         $response['message']['global'] = "Refresh failed";
 
-        $sql = $this->db->query("REFRESH MATERIALIZED VIEW summary");
+        $sql = $this->db->query("REFRESH MATERIALIZED VIEW summarybaru");
         if($sql){
             $response['status'] = true;
             $response['message']['global'] = "oke";

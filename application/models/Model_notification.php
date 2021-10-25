@@ -15,7 +15,7 @@ class Model_notification extends CI_Model {
      public function summary(){
           $result['success'] = false;
 
-          $sql = $this->db->query("select count(total) as jumlah, to_char(now(), 'YYYY-MM-DD HH24:MI:SS') as curentdate
+          $sql = $this->db->query("select sum(total) as jumlah, to_char(now(), 'YYYY-MM-DD HH24:MI:SS') as curentdate
           from summarybaru s where tgl_generate = to_char(now(), 'YYYY-MM-DD') and types = 'jatuhtempo'");
 
           if($sql->num_rows() > 0){

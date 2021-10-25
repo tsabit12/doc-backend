@@ -36,7 +36,7 @@ class Model_history extends CI_Model {
     }
 
     public function getReg($origin){
-        $result = null;
+        $result = 0;
         if(isset($origin['zone_code'])){
             $kprk = $origin['zone_code'];
             $this->db->select('regionid');

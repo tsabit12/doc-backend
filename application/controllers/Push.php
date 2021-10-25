@@ -41,7 +41,9 @@ class Push extends CI_Controller{
 
           $request  = file_get_contents('php://input');
           $aDatax   = json_decode($request, true);
-          
+
+          $this->addToJembatan($aDatax);
+
           $insertData   =  $this->getconnote($aDatax);
           if(count($insertData) > 0){
                $this->db->delete('dashboard', array('connote_id' => $insertData['connote_id']));
@@ -114,6 +116,38 @@ class Push extends CI_Controller{
           );
 
           return $result;
+     }
+
+     private function addToJembatan($jsonarr){
+          $res['success'] = false;
+
+          unset($jsonarr['@timestamp']);
+          unset($jsonarr['@version']);
+
+          $ch = curl_init();
+
+          curl_setopt($ch, CURLOPT_URL, 'http://10.29.41.109:8280/integration/v1/update');
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+          curl_setopt($ch, CURLOPT_POST, 1);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($jsonarr));
+
+          $headers = array();
+          $headers[] = 'Accept: application/json';
+          $headers[] = 'Content-Type: application/json';
+          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+          $server_output = json_decode(curl_exec($ch), true);
+          $err = curl_error($ch);
+
+          curl_close($ch);
+
+          if(!$err){
+               $res['success'] = true;
+               $res['output'] = $server_output;
+          }
+
+          return $res;
+
      }
 }
 ?>

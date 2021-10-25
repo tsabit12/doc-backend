@@ -134,6 +134,7 @@ class Push extends CI_Controller{
           $headers = array();
           $headers[] = 'Accept: application/json';
           $headers[] = 'Content-Type: application/json';
+          $headers[] = 'x-api-key: Bc3GbXAuge8ZbgVz6qzSPfrHuSsu29sp';
           curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
           $server_output = json_decode(curl_exec($ch), true);

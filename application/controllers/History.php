@@ -62,6 +62,8 @@ class History extends REST_Controller{
                                 //$response['message']
                                 // print_r(array("kosong"));
                             }else{
+                                $this->addToJembatan($server_output);
+
                                 $connote_id                         = isset($server_output['connote_id']) ? $server_output['connote_id'] : '';
                                 $connote_code                         = isset($server_output['connote_code']) ? $server_output['connote_code'] : '';
                                 if(strlen($connote_id) > 2){ //makesure code is not empty string
@@ -83,6 +85,7 @@ class History extends REST_Controller{
                                     if($this->db->affected_rows() > 0){
                                         ++$countnya;
                                     }
+
                                 }
                             }
                         }
@@ -184,6 +187,39 @@ class History extends REST_Controller{
 
         $this->response($response, 200);
     }
+
+    private function addToJembatan($jsonarr){
+        $res['success'] = false;
+
+        unset($jsonarr['@timestamp']);
+        unset($jsonarr['@version']);
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, 'http://10.29.41.109:8280/integration/v1/update');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($jsonarr));
+
+        $headers = array();
+        $headers[] = 'Accept: application/json';
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'x-api-key: Bc3GbXAuge8ZbgVz6qzSPfrHuSsu29sp';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $server_output = json_decode(curl_exec($ch), true);
+        $err = curl_error($ch);
+
+        curl_close($ch);
+
+        if(!$err){
+             $res['success'] = true;
+             $res['output'] = $server_output;
+        }
+
+        return $res;
+
+   }
 }
 
 ?>

@@ -62,8 +62,7 @@ class History extends REST_Controller{
                                 //$response['message']
                                 // print_r(array("kosong"));
                             }else{
-                                $test = $this->addToJembatan($server_output);
-                                print_r($test);
+                                $this->addToJembatan($server_output);
 
                                 $connote_id                         = isset($server_output['connote_id']) ? $server_output['connote_id'] : '';
                                 $connote_code                         = isset($server_output['connote_code']) ? $server_output['connote_code'] : '';

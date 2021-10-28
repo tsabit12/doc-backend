@@ -62,7 +62,8 @@ class History extends REST_Controller{
                                 //$response['message']
                                 // print_r(array("kosong"));
                             }else{
-                                $this->addToJembatan($server_output);
+                                $test = $this->addToJembatan($server_output);
+                                print_r($test);
 
                                 $connote_id                         = isset($server_output['connote_id']) ? $server_output['connote_id'] : '';
                                 $connote_code                         = isset($server_output['connote_code']) ? $server_output['connote_code'] : '';
@@ -196,10 +197,12 @@ class History extends REST_Controller{
 
         $ch = curl_init();
 
+        $field = $this->convert($jsonarr);
+
         curl_setopt($ch, CURLOPT_URL, 'http://10.29.41.109:8280/integration/v1/update');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($jsonarr));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($field));
 
         $headers = array();
         $headers[] = 'Accept: application/json';
@@ -218,8 +221,52 @@ class History extends REST_Controller{
         }
 
         return $res;
+    }
 
-   }
+    private function convert($arr){
+        $arr['connote']['history'] = $arr['connote_history'];
+        $arr['connote']['connote_id'] = $arr['connote_id'];
+        $arr['connote']['connote_number'] = $arr['connote_number'];
+        $arr['connote']['connote_sender_name'] = $arr['connote_sender_name'];
+        $arr['connote']['connote_sender_phone'] = $arr['connote_sender_phone'];
+        $arr['connote']['connote_sender_email'] = $arr['connote_sender_email'];
+        $arr['connote']['connote_sender_address'] = $arr['connote_sender_address'];
+        $arr['connote']['connote_sender_zipcode'] = $arr['connote_sender_zipcode'];
+        $arr['connote']['connote_receiver_name'] = $arr['connote_receiver_name'];
+        $arr['connote']['connote_receiver_phone'] = $arr['connote_receiver_phone'];
+        $arr['connote']['connote_receiver_email'] = $arr['connote_receiver_email'];
+        $arr['connote']['connote_receiver_address'] = $arr['connote_receiver_address'];
+        $arr['connote']['connote_receiver_address_detail'] = $arr['connote_receiver_address_detail'];
+        $arr['connote']['connote_receiver_zipcode'] = $arr['connote_receiver_zipcode'];
+        $arr['connote']['connote_service'] = $arr['connote_service'];
+        $arr['connote']['connote_service_price'] = $arr['connote_service_price'];
+        $arr['connote']['connote_amount'] = $arr['connote_amount'];
+        $arr['connote']['connote_code'] = $arr['connote_code'];
+        $arr['connote']['connote_booking_code'] = $arr['connote_booking_code'];
+        $arr['connote']['connote_order'] = $arr['connote_order'];
+        $arr['connote']['connote_state'] = $arr['connote_state'];
+        $arr['connote']['connote_state_id'] = $arr['connote_state_id'];
+        $arr['connote']['zone_code_from'] = $arr['zone_code_from'];
+        $arr['connote']['zone_code_to'] = $arr['zone_code_to'];
+        $arr['connote']['surcharge_amount'] = $arr['surcharge_amount'];
+        $arr['connote']['transaction_id'] = $arr['transaction_id'];
+        $arr['connote']['actual_weight'] = $arr['actual_weight'];
+        $arr['connote']['volume_weight'] = $arr['volume_weight'];
+        $arr['connote']['chargeable_weight'] = $arr['chargeable_weight'];
+        $arr['connote']['created_by'] = $arr['created_by'];
+        $arr['connote']['created_at'] = $arr['created_at'];
+        $arr['connote']['updated_at'] = $arr['updated_at'];
+        $arr['connote']['organization_id'] = $arr['organization_id'];
+        $arr['connote']['location_id'] = $arr['location_id'];
+        $arr['connote']['currentLocation'] = $arr['currentLocation'];
+        $arr['connote']['connote_sla_day'] = $arr['connote_sla_day'];
+        $arr['connote']['location_name'] = $arr['location_name'];
+        $arr['connote']['location_type'] = $arr['location_type'];
+
+        unset($arr['connote_history']);
+
+        return $arr;
+    }
 }
 
 ?>

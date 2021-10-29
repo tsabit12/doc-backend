@@ -112,7 +112,9 @@ class Push extends CI_Controller{
                'last_connote_state' => isset($last['state']) ? strtoupper($last['state']) : 'UNKNOWN',
                'last_connote_update' =>  isset($last['date']) ? date('Y-m-d h:i:s', strtotime($last['date'])) : null,
                'last_connote_created' => isset($last['date']) ? date('Y-m-d h:i:s', strtotime($last['date'])) : null,
-               'list_status' => $this->getStatuslist($history)
+               'list_status' => $this->getStatuslist($history),
+               'connote_booking_code' => isset($data['connote']['connote_booking_code']) ? $data['connote_booking_code'] : null,
+               'customer_code' => isset($data['custom_field']['id_pelanggan_korporat']) ? $data['custom_field']['id_pelanggan_korporat'] : null
           );
 
           return $result;

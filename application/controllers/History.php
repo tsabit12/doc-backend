@@ -155,7 +155,9 @@ class History extends REST_Controller{
             'last_connote_update' =>  isset($last['updated_at']) ? date('Y-m-d h:i:s', strtotime($last['updated_at'])) : null,
             'last_connote_created' => isset($last['created_at']) ? date('Y-m-d h:i:s', strtotime($last['created_at'])) : null,
             'chargeable_weight' => isset($data['chargeable_weight']) ? $data['chargeable_weight'] : 0,
-            'list_status' => $this->getStatuslist($history)
+            'list_status' => $this->getStatuslist($history),
+            'connote_booking_code' => isset($data['connote_booking_code']) ? $data['connote_booking_code'] : null,
+            'customer_code' => isset($data['connote_customfield']['id_pelanggan_korporat']) ? $data['connote_customfield']['id_pelanggan_korporat'] : null
         );
 
         return $result;

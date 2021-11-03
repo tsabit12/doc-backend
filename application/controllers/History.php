@@ -138,6 +138,13 @@ class History extends REST_Controller{
         $office     = isset($data['location_data_created']['location_code']) ? $data['location_data_created']['location_code'] : '00';
         $regional   = isset($data['connote_customfield']['regional']) ? $data['connote_customfield']['regional'] : $this->model_history->getRegByOffice($office);
         $last       = $this->getHistory($history);
+        $kprkdest   = null;
+
+        if(isset($data['connote_customfield'])){
+            if(isset($data['connote_customfield']['destination_kprk'])){
+                $kprkdest = $data['connote_customfield']['destination_kprk'];
+            }
+        }
 
         $result = array(
             'connote_id' => $data['connote_id'],
@@ -157,7 +164,8 @@ class History extends REST_Controller{
             'chargeable_weight' => isset($data['chargeable_weight']) ? $data['chargeable_weight'] : 0,
             'list_status' => $this->getStatuslist($history),
             'connote_booking_code' => isset($data['connote_booking_code']) ? $data['connote_booking_code'] : null,
-            'customer_code' => isset($data['connote_customfield']['id_pelanggan_korporat']) ? $data['connote_customfield']['id_pelanggan_korporat'] : null
+            'customer_code' => isset($data['connote_customfield']['id_pelanggan_korporat']) ? $data['connote_customfield']['id_pelanggan_korporat'] : null,
+            'kprk_destination' => $kprkdest
         );
 
         return $result;

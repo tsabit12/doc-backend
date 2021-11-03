@@ -6,13 +6,12 @@ class Model_jatuhtempo extends CI_Model {
 
         $reg = $params['regional'];
         $kprk = $params['kprk'];
-        $date = date('Y-m-d');
         
         $this->db->select('types, regionid as region, location_code as nopend, connote_service as service, sum(total) as jumlah, hari_oversla');
         $this->db->from('summarybaru');
         $this->db->group_by(array('types', 'regionid', 'location_code', 'connote_service', 'hari_oversla'));
         
-        $this->db->where('tgl_generate', $date);
+        $this->db->where("tgl_generate = to_char(now(), 'YYYY-MM-DD')", null);
 
         if($reg != '00'){ //not nasional 
             if($kprk == '00'){ //current regional with all kprk

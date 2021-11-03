@@ -12,47 +12,33 @@ Class Notification extends REST_Controller{
           $res['status'] = false;
           $res['message']['global'] = "failed push notification";
 
-          $users = $this->model_notification->getToken();
-          $summary = $this->model_notification->summary();
+          $payload = $this->model_notification->getNotif();
+          
+          
+          $ch = curl_init();
 
-          if($summary['success']){
-               $summarydata = $summary['data'];
+     
+          curl_setopt($ch, CURLOPT_URL, 'https://exp.host/--/api/v2/push/send');
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+          curl_setopt($ch, CURLOPT_POST, 1);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 
-               $ch = curl_init();
+          $headers = array();
+          $headers[] = 'Accept: application/json';
+          $headers[] = 'Content-Type: application/json';
+          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-               $field = array(
-                    "to" => $users,
-                    "title" => "📬 Halo pengguna DOC",
-                    "body" => "kiriman jatuh tempo di kantor saudara sebanyak : ".$summarydata['jumlah']." items mohon segera diantar dan dilakukan update status. Terimakasih",
-                    "channelId" => "default-doc",
-                    "categoryId" => "basic",
-                    "data" => array(
-                         "title" => "Task progress reminder",
-                         "time" => $summarydata['curentdate'],
-                         "jumlah" => 40000
-                    )
-               );
-     
-               curl_setopt($ch, CURLOPT_URL, 'https://exp.host/--/api/v2/push/send');
-               curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-               curl_setopt($ch, CURLOPT_POST, 1);
-               curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($field));
-     
-               $headers = array();
-               $headers[] = 'Accept: application/json';
-               $headers[] = 'Content-Type: application/json';
-               curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-     
-               $server_output = json_decode(curl_exec($ch), true);
-               $err = curl_error($ch);
-     
-               curl_close($ch);
-     
-               if(!$err){
-                    $res['status'] = true;
-                    $res['message']['global'] = "Push notification success";
-               }
+          $server_output = json_decode(curl_exec($ch), true);
+          $err = curl_error($ch);
+
+          curl_close($ch);
+
+          if(!$err){
+               $res['status'] = true;
+               $res['message']['global'] = "Push notification success";
+               $res['output'] = $server_output;
           }
+     
 
           $this->response($res, 200);
 

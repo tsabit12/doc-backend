@@ -7,23 +7,26 @@ class Model_notification extends CI_Model {
 
           foreach($users as $key){
                $total    = $this->summary($key['roleid'], $key['office']);
-               $body     = $this->getbody($total, $key['roleid']);
-               $result[] = array(
-                    "to" => $key['token'],
-                    "title" => "Halo ".$key["fullname"]."! Anda mendapatkan email baru📬",
-                    "body" => $body,
-                    "channelId" => "default-doc",
-                    "categoryId" => "basic"
-               );
+               if($total > 0){
+                    $body     = $this->getbody($total, $key['roleid']);
+                    $result[] = array(
+                         "to" => $key['token'],
+                         "title" => "Halo ".$key["fullname"]."! Anda mendapatkan email baru📬",
+                         "body" => $body,
+                         "channelId" => "default-doc",
+                         "categoryId" => "basic"
+                    );
+               }
           }
 
           return $result;
      }
 
      public function summary($level, $kantor){
+          $date = date('Y-m-d');
           $result = 0;
 
-          $this->db->select('sum(total) as jumlah');
+          $this->db->select('coalesce(sum(total), 0) as jumlah');
           $this->db->from('summarybaru');
 
           if($level == '4'){ //regional
@@ -32,7 +35,8 @@ class Model_notification extends CI_Model {
                $this->db->where('location_code', $kantor);
           }
 
-          $this->db->where("tgl_generate = to_char(now(), 'YYYY-MM-DD')", null);
+          $this->db->where("tgl_generate", $date);
+          $this->db->where("types", "jatuhtempo");
 
           $q = $this->db->get();
           if($q->num_rows() > 0){

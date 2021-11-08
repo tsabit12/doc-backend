@@ -95,3 +95,26 @@ $db['default'] = array(
 	'failover' => array(),
 	'save_queries' => TRUE
 );
+
+$db['dblacak'] = array(
+	'dsn'	=> '',
+	'hostname' => getenv('DB_HOST_LACAK'),
+	'port' => '1433',
+	'username' => getenv('DB_USER_LACAK'),
+	'password' => getenv('DB_PASS_LACAK'),
+	'database' => getenv('DB_NAME_LACAK'),
+	'dbdriver' => 'sqlsrv',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
